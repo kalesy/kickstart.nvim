@@ -154,6 +154,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- NOTE: My options here
+vim.opt.expandtab = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -175,20 +178,36 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<C-h>', '5h', { desc = 'Quick move with 5' })
+vim.keymap.set('n', '<C-l>', '5l', { desc = 'Quick move with 5' })
+vim.keymap.set('n', '<C-j>', '5j', { desc = 'Quick move with 5' })
+vim.keymap.set('n', '<C-k>', '5k', { desc = 'Quick move with 5' })
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
+vim.keymap.set('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
+vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
+vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
+
+-- NOTE: my mapping here
+vim.keymap.set('n', '<A-q>', ':q<CR>', { desc = 'Quick quit' })
+vim.keymap.set('i', '<A-q>', '<Esc>:q<CR>', { desc = 'Quick quit' })
+
+vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Quick save' })
+vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>', { desc = 'Quick save' })
+
+vim.keymap.set('n', ';', ':', { desc = 'Quick cmd mode' })
+
+vim.keymap.set('n', '<A-h>', '<C-w>h', { desc = 'Window left' })
+vim.keymap.set('n', '<A-j>', '<C-w>j', { desc = 'Window right' })
+vim.keymap.set('n', '<A-k>', '<C-w>k', { desc = 'Window up' })
+vim.keymap.set('n', '<A-l>', '<C-w>l', { desc = 'Window down' })
+
+-- NOTE: My plugin mappings here, but i know it should not be here
+vim.keymap.set('n', 't', ':NvimTreeToggle<CR>', { desc = 'Toggle nvim tree' })
+
+vim.keymap.set('n', '<A-i>', function()
+  require('nvterm.terminal').toggle 'float'
+end, { desc = 'Toggle float terminal' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -226,8 +245,37 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  {
+    'cameron-wags/rainbow_csv.nvim',
+    config = true,
+    ft = { 'csv', 'tsv', 'csv_semicolon', 'csv_whitespace', 'csv_pipe', 'rfc_csv', 'rfc_tsv' },
+    cmd = { 'RainbowDelim', 'RainbowDelimSimple', 'RainbowDelimQuoted', 'RainbowMultiDelim' },
+  },
+  {
+    'nvim-tree/nvim-tree.lua',
+    config = function()
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+      require('nvim-tree').setup {
+        sort = { sorter = 'case_sensitive' },
+        view = { width = 50, side = 'right' },
+      }
+    end,
+  },
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
+  {
+    'zbirenbaum/nvterm',
+    config = function()
+      require('nvterm').setup()
+    end,
+  },
+  -- t{
+  --   'nvoid-lua/bufferline.lua',
+  --   requires = 'nvim-tree/nvim-web-devicons',
+  --   config = function()
+  --     require('bufferline').setup { kind_icons = true }
+  --   end,
+  -- },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -750,16 +798,16 @@ require('lazy').setup({
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
+          -- ['<C-l>'] = cmp.mapping(function()
+          --   if luasnip.expand_or_locally_jumpable() then
+          --     luasnip.expand_or_jump()
+          --   end
+          -- end, { 'i', 's' }),
+          -- ['<C-h>'] = cmp.mapping(function()
+          --   if luasnip.locally_jumpable(-1) then
+          --     luasnip.jump(-1)
+          --   end
+          -- end, { 'i', 's' }),
 
           -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -874,9 +922,9 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
