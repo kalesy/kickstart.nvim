@@ -154,11 +154,17 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
--- NOTE: My options here
 vim.opt.expandtab = true
-
--- [[ Basic Keymaps ]]
+vim.opt.shiftwidth = 4
+vim.opt.smartindent = true
+vim.opt.tabstop = 4
+-- NOTE: [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+--
+-- local mappings = require 'mappings'
+-- for _, tb in ipairs(mappings) do
+--   vim.keymap.set(tb.mode, tb.key, tb.action, { desc = tb.desc })
+-- end
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -175,39 +181,36 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- is not what someone will guess without a bit more experience.
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+--
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('n', '<A-i>', function()
+  require('nvterm.terminal').toggle 'float'
+end, { desc = 'Toggle float terminal' })
 
-vim.keymap.set('n', '<C-h>', '5h', { desc = 'Quick move with 5' })
-vim.keymap.set('n', '<C-l>', '5l', { desc = 'Quick move with 5' })
-vim.keymap.set('n', '<C-j>', '5j', { desc = 'Quick move with 5' })
-vim.keymap.set('n', '<C-k>', '5k', { desc = 'Quick move with 5' })
+vim.keymap.set('n', '<leader>v', function()
+  require('nvterm.terminal').toggle 'vertical'
+end, { desc = 'Toggle vertical terminal' })
+
+vim.keymap.set('n', '<leader>h', function()
+  require('nvterm.terminal').toggle 'vertical'
+end, { desc = 'Toggle horizontal terminal' })
 
 vim.keymap.set('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
 vim.keymap.set('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
 vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
 vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
 
--- NOTE: my mapping here
 vim.keymap.set('n', '<A-q>', ':q<CR>', { desc = 'Quick quit' })
 vim.keymap.set('i', '<A-q>', '<Esc>:q<CR>', { desc = 'Quick quit' })
-
 vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Quick save' })
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>', { desc = 'Quick save' })
-
 vim.keymap.set('n', ';', ':', { desc = 'Quick cmd mode' })
-
 vim.keymap.set('n', '<A-h>', '<C-w>h', { desc = 'Window left' })
 vim.keymap.set('n', '<A-j>', '<C-w>j', { desc = 'Window right' })
 vim.keymap.set('n', '<A-k>', '<C-w>k', { desc = 'Window up' })
 vim.keymap.set('n', '<A-l>', '<C-w>l', { desc = 'Window down' })
-
--- NOTE: My plugin mappings here, but i know it should not be here
 vim.keymap.set('n', 't', ':NvimTreeToggle<CR>', { desc = 'Toggle nvim tree' })
-
-vim.keymap.set('n', '<A-i>', function()
-  require('nvterm.terminal').toggle 'float'
-end, { desc = 'Toggle float terminal' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -781,9 +784,9 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -851,14 +854,14 @@ require('lazy').setup({
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      -- require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      -- require('mini.surround').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -921,7 +924,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
@@ -933,7 +936,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
