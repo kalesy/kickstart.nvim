@@ -686,7 +686,7 @@ require('lazy').setup({
         settings = {},
         cmd = { 'ncat', '127.0.0.1', '6005' },
       }
-      require('lspconfig').gdscript.setup(gdscript_config)
+      -- require('lspconfig').gdscript.setup(gdscript_config)
     end,
   },
 
