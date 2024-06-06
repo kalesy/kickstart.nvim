@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -155,9 +155,11 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.opt.expandtab = true
+vim.opt.pumheight = 10
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.tabstop = 4
+vim.opt.swapfile = false
 -- NOTE: [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --
@@ -200,6 +202,11 @@ vim.keymap.set('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
 vim.keymap.set('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
 vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
 vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
+
+vim.keymap.set('n', '<C-h>', '5h', { desc = 'Move left with 5h' })
+vim.keymap.set('n', '<C-l>', '5l', { desc = 'Move right with 5l' })
+vim.keymap.set('n', '<C-j>', '5j', { desc = 'Move down with 5j' })
+vim.keymap.set('n', '<C-k>', '5k', { desc = 'Move up with 5k' })
 
 vim.keymap.set('n', '<A-q>', ':q<CR>', { desc = 'Quick quit' })
 vim.keymap.set('i', '<A-q>', '<Esc>:q<CR>', { desc = 'Quick quit' })
@@ -272,6 +279,7 @@ require('lazy').setup({
       require('nvterm').setup()
     end,
   },
+  { 'habamax/vim-godot', event = 'VimEnter' },
   -- t{
   --   'nvoid-lua/bufferline.lua',
   --   requires = 'nvim-tree/nvim-web-devicons',
@@ -673,6 +681,12 @@ require('lazy').setup({
           end,
         },
       }
+      local gdscript_config = {
+        capabilities = capabilities,
+        settings = {},
+        cmd = { 'ncat', '127.0.0.1', '6005' },
+      }
+      require('lspconfig').gdscript.setup(gdscript_config)
     end,
   },
 
@@ -889,14 +903,8 @@ require('lazy').setup({
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
+      highlight = { enable = true },
+      indent = { enable = false },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
