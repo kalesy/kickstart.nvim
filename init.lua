@@ -170,6 +170,7 @@ vim.opt.swapfile = false
 -- for _, tb in ipairs(mappings) do
 --   vim.keymap.set(tb.mode, tb.key, tb.action, { desc = tb.desc })
 -- end
+vim.keymap.set('n', '<C-c>', ':cw<CR>', { desc = 'Toggle quickFix window' })
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
