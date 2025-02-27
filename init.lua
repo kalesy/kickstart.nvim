@@ -281,6 +281,21 @@ require('lazy').setup({
       }
     end,
   },
+  -- AI plugins
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.keymap.set('i', '<C-a>', '<Plug>(copilot-accept-word)')
+      vim.keymap.set('i', '<C-d>', 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false })
+      vim.g.copilot_no_tab_map = true
+    end,
+  },
+  {
+    'elzr/vim-json',
+  },
+  {
+    'vito-c/jq.vim',
+  },
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
     'zbirenbaum/nvterm',
@@ -662,7 +677,9 @@ require('lazy').setup({
       --    :Mason
       --
       --  You can press `g?` for help in this menu.
-      require('mason').setup()
+      require('mason').setup {
+        pip = { install_args = { '--proxy', 'http://127.0.0.1:10809' } },
+      }
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -684,12 +701,6 @@ require('lazy').setup({
           end,
         },
       }
-      local gdscript_config = {
-        capabilities = capabilities,
-        settings = {},
-        cmd = { 'ncat', '127.0.0.1', '6005' },
-      }
-      -- require('lspconfig').gdscript.setup(gdscript_config)
     end,
   },
 
@@ -720,6 +731,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        json = { 'fixjson' },
+        -- python = { 'autopep8' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -907,7 +920,7 @@ require('lazy').setup({
       -- Autoinstall languages that are not installed
       auto_install = false,
       highlight = { enable = true },
-      indent = { enable = false },
+      indent = { enable = true },
       disable = { 'nvimdoc' },
     },
     config = function(_, opts)
@@ -917,6 +930,7 @@ require('lazy').setup({
       require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+      require('nvim-treesitter.install').command_extra_args = { curl = { '--proxy', 'http://127.0.0.1:10809' } }
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -937,7 +951,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
