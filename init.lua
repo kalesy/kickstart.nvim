@@ -282,14 +282,32 @@ require('lazy').setup({
     end,
   },
   -- AI plugins
-  {
-    'github/copilot.vim',
-    config = function()
-      vim.keymap.set('i', '<C-a>', '<Plug>(copilot-accept-word)')
-      vim.keymap.set('i', '<C-d>', 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false })
-      vim.g.copilot_no_tab_map = true
-    end,
-  },
+  -- {
+  --   'github/copilot.vim',
+  --   config = function()
+  --     vim.keymap.set('i', '<C-a>', '<Plug>(copilot-accept-word)')
+  --     vim.keymap.set('i', '<C-d>', 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false })
+  --     vim.g.copilot_no_tab_map = true
+  --   end,
+  -- },
+  -- {
+  --   'milanglacier/minuet-ai.nvim',
+  --   config = function()
+  --     require('minuet').setup {
+  --       provider = 'openai_fim_compatible',
+  --       provider_options = {
+  --         openai_fim_compatible = {
+  --           api_key = '',
+  --           name = 'deepseek',
+  --           optional = {
+  --             max_tokens = 256,
+  --             top_p = 0.9,
+  --           },
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
   {
     'elzr/vim-json',
   },
@@ -920,7 +938,7 @@ require('lazy').setup({
       -- Autoinstall languages that are not installed
       auto_install = false,
       highlight = { enable = true },
-      indent = { enable = true },
+      indent = { enable = false },
       disable = { 'nvimdoc' },
     },
     config = function(_, opts)
